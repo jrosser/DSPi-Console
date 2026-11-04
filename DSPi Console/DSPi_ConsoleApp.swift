@@ -6589,6 +6589,17 @@ struct ControlSurfacesSettingsTab: View {
         return avail.first ?? 0
     }
 
+    // Valid ADC Pins, excluding pin 29
+    private var validADCPins: [UInt8] {
+        var pins: [UInt8] = [ 26, 27, 28 ]
+
+        if PlatformInfo.shared.name == "RP2350B" {
+            pins += [ 40, 41, 42, 43, 44, 45, 46, 47 ]
+        }
+
+        return pins
+    }
+
     /// Build a fresh binding when a slot's component type changes.
     private func makeBinding(type: Int, slot: Int) -> CsBinding {
         if type == CS_TYPE_NONE { return CsBinding() }
@@ -6634,7 +6645,7 @@ struct ControlSurfacesSettingsTab: View {
         let adc = (typeDesc(type)?.pinClass ?? 0) == CS_PINCLASS_ADC
         let twoPin = (typeDesc(type)?.pinCount ?? 1) >= 2
         let free = freePins(slot: slot, adcOnly: adc)
-        b.gpio0 = free.first ?? (adc ? (CS_ADC_PINS.first ?? 26) : (HardwareSettingsTab.validPins.first ?? 0))
+        b.gpio0 = free.first ?? (adc ? (validADCPins.first ?? 26) : (HardwareSettingsTab.validPins.first ?? 0))
         if twoPin {
             b.gpio1 = free.dropFirst().first ?? (b.gpio0 == 0 ? 1 : 0)
         } else {
@@ -7361,7 +7372,7 @@ struct ControlSurfacesSettingsTab: View {
     }
 
     private func freePins(slot: Int, adcOnly: Bool) -> [UInt8] {
-        let base = adcOnly ? CS_ADC_PINS : HardwareSettingsTab.validPins
+        let base = adcOnly ? validADCPins : HardwareSettingsTab.validPins
         return base.filter { vm.pinInUseBy($0, excluding: .controlSurface(slot)) == nil }
     }
 
@@ -7372,7 +7383,7 @@ struct ControlSurfacesSettingsTab: View {
     /// gesture; spec §6.1), so those pins stay selectable for a button.
     private func pinCandidates(slot: Int, type: Int, isSecond: Bool) -> [UInt8] {
         let adc = (typeDesc(type)?.pinClass ?? 0) == CS_PINCLASS_ADC
-        let base = adc ? CS_ADC_PINS : HardwareSettingsTab.validPins
+        let base = adc ? validADCPins : HardwareSettingsTab.validPins
         let twoPin = (typeDesc(type)?.pinCount ?? 1) >= 2
         let sibling: UInt8? = twoPin ? (isSecond ? drafts[slot].gpio0 : drafts[slot].gpio1) : nil
         let current = isSecond ? drafts[slot].gpio1 : drafts[slot].gpio0
@@ -8245,6 +8256,7 @@ struct HardwareSettingsTab: View {
 
         return pins
     }
+
 
 
 

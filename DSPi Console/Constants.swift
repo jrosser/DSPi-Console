@@ -1291,9 +1291,6 @@ func csDecodeStepDelay(_ raw: UInt16) -> Float { Float(raw) / 100 }
 /// stripped button press, so it gets the button repertoire minus MOMENTARY
 /// (nothing holds it) and minus the indicator actions.
 let CS_MACRO_STEP_ACTIONS: [Int] = [CS_ACT_SET, CS_ACT_TOGGLE, CS_ACT_INC, CS_ACT_DEC, CS_ACT_TRIGGER]
-/// ADC-capable GPIOs (ADC0..2 on both platforms) - the only pins a
-/// potentiometer may occupy.  GPIO 29 (VSYS/3 monitor) is excluded.
-let CS_ADC_PINS: [UInt8]      = [26, 27, 28]
 
 // CsType (component wired up).  Append-only; index into the caps type table.
 let CS_TYPE_NONE: Int     = 0
