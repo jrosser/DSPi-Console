@@ -82,7 +82,7 @@ struct PresetDocument: Codable {
         /// ISO-8601 date decoders reject.
         var savedUtc: String = ""
         var appVersion: String?
-        var platform: String?            // "RP2040" / "RP2350"
+        var platform: String?            // "RP2040" / "RP2350" / "RP2350B"
         var firmwareVersion: String?
         var wireFormatVersion: Int = 0
         var inputChannelCount: Int = 0

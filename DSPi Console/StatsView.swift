@@ -531,7 +531,7 @@ class StatsViewModel: ObservableObject {
             return
         }
         DispatchQueue.main.async {
-            self.adatSupported = (self.platformName == "RP2350")
+            self.adatSupported = (self.platformName == "RP2350" || self.platformName == "RP2350B")
             self.adatStatus = status
         }
     }
@@ -705,6 +705,7 @@ class StatsViewModel: ObservableObject {
             switch reply.platform {
             case 1:  platformStr = "RP2350"
             case 2:  platformStr = "STM32H723"
+            case 3:  platformStr = "RP2350B"
             default: platformStr = "RP2040"
             }
             let versionStr = "v" + reply.version.description

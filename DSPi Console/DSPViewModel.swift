@@ -1527,7 +1527,7 @@ class DSPViewModel: ObservableObject {
     var i2sMaxPairs: Int { platformName == "RP2040" ? 1 : I2S_RX_MAX_PAIRS_RP2350 }
     var i2sMaxInputChannels: Int { i2sMaxPairs * 2 }
     /// True when the device can do multichannel (>2) I2S input.
-    var supportsMultichannelI2S: Bool { i2sInputSupported && platformName == "RP2350" }
+    var supportsMultichannelI2S: Bool { i2sInputSupported && (platformName == "RP2350" || platformName == "RP2350B") }
     /// Number of currently-active I2S stereo pairs (count / 2).
     var i2sActivePairs: Int { max(1, i2sInputChannels / 2) }
 
@@ -1947,7 +1947,7 @@ class DSPViewModel: ObservableObject {
     /// True when the device supports multichannel (>2) USB input: an RP2350 on
     /// V16 firmware reporting 8 inputs.  Gates all multichannel UI (spec §4).
     var supports8chInput: Bool {
-        platformName == "RP2350"
+        (platformName == "RP2350" || platformName == "RP2350B")
             && firmwareWireFormatVersion == WIRE_FORMAT_VERSION
             && numInputChannels == MAX_MATRIX_INPUTS
     }
@@ -2209,7 +2209,7 @@ class DSPViewModel: ObservableObject {
     /// the wire version and the platform keeps the feature out of sight on any
     /// device that cannot run it.
     var firmwareSupportsUpmixer: Bool {
-        firmwareWireFormatVersion >= 26 && platformName == "RP2350"
+        firmwareWireFormatVersion >= 26 && (platformName == "RP2350" || platformName == "RP2350B")
     }
 
     /// True when the upmixer is deriving matrix source rows: it is enabled and

@@ -8233,11 +8233,20 @@ struct HardwareSettingsTab: View {
     // the debug UART was removed, and GPIO 12 (the ADAT default) is likewise
     // free.  RP2350 additionally allows GPIO 29, but this list is shared with
     // RP2040 (max GPIO 28), so 29 is not offered.
-    static let validPins: [UInt8] = [
-        0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12,
-        13, 14, 15, 16, 17, 18, 19, 20, 21, 22,
-        26, 27, 28
-    ]
+    static var validPins: [UInt8] {
+        var pins: [UInt8] = [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12,
+                              13, 14, 15, 16, 17, 18, 19, 20, 21, 22,
+                              26, 27, 28 ]
+
+        if PlatformInfo.shared.name == "RP2350B" {
+            pins += [ 30, 31, 32, 33, 34, 35, 36, 37, 38, 39,
+                      40, 41, 42, 43, 44, 45, 46, 47 ]
+        }
+
+        return pins
+    }
+
+
 
     /// Whether the connected device's hardware allows slot `slot` to be
     /// I2S given the current state of its dependency parents.  Per

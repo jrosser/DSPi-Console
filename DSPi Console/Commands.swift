@@ -157,6 +157,7 @@ extension DSPViewModel {
         switch platform {
         case 1:  name = "RP2350"
         case 2:  name = "STM32H723"
+        case 3:  name = "RP2350B"
         default: name = "RP2040"
         }
         DispatchQueue.main.async {
@@ -2371,7 +2372,7 @@ extension DSPViewModel {
         DispatchQueue.main.async {
             // The engine is compiled out on RP2040 (status all-zero); gate the UI
             // on platform so a zeroed RP2040 response never shows the section.
-            self.adatSupported = (self.platformName == "RP2350")
+            self.adatSupported = (self.platformName == "RP2350" || self.platformName == "RP2350B")
             self.adatStatus = status
             self.adatEnabled = status.enabled
             if status.pin != 0 { self.adatPin = status.pin }
@@ -2440,7 +2441,7 @@ extension DSPViewModel {
         DispatchQueue.main.async {
             // The engine is compiled out on RP2040 (status all-zero); gate the UI
             // on platform so a zeroed RP2040 response never shows the section.
-            self.adatInputSupported = (self.platformName == "RP2350")
+            self.adatInputSupported = (self.platformName == "RP2350" || self.platformName == "RP2350B")
             self.adatInputStatus = status
             self.adatInputEnabled = status.enabled
             self.adatInputClockMode = status.clockMode
@@ -3740,6 +3741,7 @@ extension DSPViewModel {
         switch platformId {
         case 1:  platform = "RP2350"
         case 2:  platform = "STM32H723"
+        case 3:  platform = "RP2350B"
         default: platform = "RP2040"
         }
 
@@ -4164,7 +4166,7 @@ extension DSPViewModel {
             // ADAT bulk output is RP2350-only (the engine is compiled out on
             // RP2040, which reports zeros here).  fetchAdatConfig() refines this
             // with live active/rate status right after the bulk fetch.
-            self.adatSupported = (platform == "RP2350")
+            self.adatSupported = (platform == "RP2350" || platform == "RP2350B")
             self.adatEnabled = bulkAdatEnabled
             self.adatPin = bulkAdatPin
             self.adatStatus.enabled = bulkAdatEnabled
@@ -4174,7 +4176,7 @@ extension DSPViewModel {
             // encoded enable / clock-mode fields decode as absent (keep live) when
             // zero; fetchAdatInputConfig() refines this with the live lock status
             // right after the bulk fetch.
-            self.adatInputSupported = (platform == "RP2350")
+            self.adatInputSupported = (platform == "RP2350" || platform == "RP2350B")
             self.adatInputPin = bulkAdatInputPin
             self.adatInputStatus.pin = bulkAdatInputPin
             if bulkAdatInputEnabledP1 != 0 {

@@ -268,7 +268,7 @@ enum OnboardingCatalogue {
             { $0.i2sInputSupported }),
         jit("upmixer", "Stereo Upmixer",
             "Derives centre and surround channels from an ordinary stereo recording, so a two-channel source can drive more speakers. Nothing is invented: the extra channels are pulled out of what the stereo pair already contains.",
-            { $0.platformName == "RP2350" }),
+            { $0.platformName == "RP2350" || $0.platformName == "RP2350B" }),
         jit("crossfeed", "Headphone Crossfeed",
             "On headphones each ear hears only its own channel, which is not how speakers in a room work and is why some recordings feel oddly wide. Crossfeed blends a little of each channel into the other, with a short delay, to relax that effect."),
         jit("loudness", "Loudness Compensation",
