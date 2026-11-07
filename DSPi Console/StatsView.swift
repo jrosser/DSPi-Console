@@ -255,6 +255,8 @@ class StatsViewModel: ObservableObject {
     @Published var platformName: String = "-"
     @Published var firmwareVersion: String = "-"
     @Published var outputCount: Int = 0
+    @Published var psramMb: Int = 0
+    @Published var psramCsGpio: Int = 0
 
     // Buffer fill level statistics
     @Published var bufferStats: BufferStatsPacket = BufferStatsPacket()
@@ -697,7 +699,7 @@ class StatsViewModel: ObservableObject {
 
         // REQ_GET_PLATFORM (0x7F): decoded, short replies included, by
         // FirmwareVersion.fromPlatformReply, the same as fetchPlatform().
-        if let data = transport.getControlRequest(request: REQ_GET_PLATFORM, value: 0, index: 2, length: 7),
+        if let data = transport.getControlRequest(request: REQ_GET_PLATFORM, value: 0, index: 2, length: 9),
            let reply = FirmwareVersion.fromPlatformReply([UInt8](data)) {
             let outputs = Int(data[data.startIndex + 3])
 
@@ -709,11 +711,15 @@ class StatsViewModel: ObservableObject {
             default: platformStr = "RP2040"
             }
             let versionStr = "v" + reply.version.description
+            let psramMb = Int(data[data.startIndex + 7])
+            let psramCsGpio = Int(data[data.startIndex + 8])
 
             DispatchQueue.main.async {
                 self.platformName = platformStr
                 self.firmwareVersion = versionStr
                 self.outputCount = outputs
+                self.psramMb = psramMb;
+                self.psramCsGpio = psramCsGpio;
             }
         }
 
@@ -925,6 +931,8 @@ struct StatsView: View {
                 SystemInfoRow(title: "Firmware", value: vm.firmwareVersion)
                 SystemInfoRow(title: "Serial", value: vm.serialNumber)
                 SystemInfoRow(title: "Reconnects", value: "\(vm.reconnectCount)")
+                SystemInfoRow(title: "PSRAM Size", value: vm.psramMb == 0 ? "-" : "\(vm.psramMb)MB")
+                SystemInfoRow(title: "PSRAM Chip-Select Pin", value: vm.psramMb == 0 ? "-" : "GPIO \(vm.psramCsGpio)")
             }
         }
     }

@@ -1924,6 +1924,14 @@ class DSPViewModel: ObservableObject {
         }
     }
 
+    /// Autodetected size of psram installed on an RP2350 in bytes/(1024*1024)
+    /// Defaults to 0
+    @Published var psramMb: Int = 0
+
+    /// Autodetected GPIO pin for PSRAM if fitted.
+    /// Defaults to 0, only meaningful if psram_mb is greater than 0.
+    @Published var psramCsGpio: Int = 0
+
     /// Device MAX input channels, read from the bulk header (byte 4): 2 for
     /// RP2040, 8 for RP2350.  This is the capability flag and also defines the
     /// channel-index base for outputs (CH_OUT_1 = num_input_channels).  Defaults

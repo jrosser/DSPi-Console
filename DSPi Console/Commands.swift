@@ -3744,6 +3744,8 @@ extension DSPViewModel {
         case 3:  platform = "RP2350B"
         default: platform = "RP2040"
         }
+        let psramMb = Int(data[data.startIndex + 11])
+        let psramCsGpio = Int(data[data.startIndex + 12])
 
         // --- Global (offset 16) ---
         let preamp: Float = data.withUnsafeBytes { $0.load(fromByteOffset: BULK_GLOBAL_OFFSET, as: Float.self) }
@@ -4017,6 +4019,8 @@ extension DSPViewModel {
         // --- Apply all parsed values on main thread ---
         DispatchQueue.main.async {
             self.platformName = platform
+            self.psramMb = psramMb
+            self.psramCsGpio = psramCsGpio
             self.numInputChannels = numInCh
             _ = preamp  // legacy global preamp; per-input preamp is authoritative
 
